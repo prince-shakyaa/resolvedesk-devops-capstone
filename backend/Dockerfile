@@ -1,5 +1,5 @@
 # ---------- Stage 1: resolve dependencies into an isolated virtualenv ----------
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 WORKDIR /build
 ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
 RUN python -m venv /opt/venv
@@ -8,7 +8,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # ---------- Stage 2: slim runtime image, non-root ----------
-FROM python:3.12-slim
+FROM python:3.14-slim
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
