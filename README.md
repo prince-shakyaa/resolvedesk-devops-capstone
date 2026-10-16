@@ -178,4 +178,4 @@ diagnose each with `kubectl describe`, `logs`, `get endpoints` and `get events`.
 
 ## Author
 
-Prince Shakya - Scaler School of Technology, DevOps Final Capstone, October 2026.
+Prince Shakya (Roll No. 24BCS10084)
