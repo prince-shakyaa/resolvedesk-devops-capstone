@@ -16,7 +16,7 @@ Screenshots are in `docs/screenshots/` using the file names below.
 | M7 Terraform | valid HCL, init/plan, VPC 2 public subnets, EKS node group, destroy, tfvars.example | `terraform/` | `m7-plan.png`, `m7-aws-vpc.png`, `m7-aws-eks.png`, `m7-aws-eks-nodegroup.png`, `m7-eks-nodes.png`, `m7-destroy.png` |
 | M8 K8s + Helm | namespace, chart, upgrade --install, 2 replicas, ClusterIP, Ingress `/` and `/api`, pods Running | `k8s/namespace.yaml`, `helm/resolvedesk` | `m8-pods.png`, `m8-svc.png`, `m8-helm-list.png`, `m8-ingress-browser.png` |
 | M9 Observability | `/metrics`, Prometheus scraping, Grafana panel | `monitoring/` | `m9-metrics.png`, `m9-prom-targets.png`, `m9-grafana.png` |
-| M10 Docs | README, live demo | `README.md`, `docs/DEMO.md` | - |
+| M10 Docs | README, live demo | `README.md`, `docs/DEMO.md` | `docs/demo/resolvedesk-demo.mp4` (screen recording) |
 
 ## GitHub settings to complete after the first push
 

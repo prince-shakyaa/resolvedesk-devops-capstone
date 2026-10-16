@@ -192,6 +192,20 @@ with `terraform apply` in ap-southeast-2 (destroyed right after).
 
 ![Grafana dashboard](docs/screenshots/m9-grafana.png)
 
+## Demo recording
+
+A silent screen recording of the running system (about 80 seconds) is at
+[`docs/demo/resolvedesk-demo.mp4`](docs/demo/resolvedesk-demo.mp4). It walks through:
+
+1. the ResolveDesk UI: creating a ticket, moving it to In Progress, assigning it and posting an update
+2. the FastAPI Swagger UI executing `/api/tickets/stats`
+3. the green GitHub Actions pipeline and the SHA-tagged images in GHCR
+4. the app and Swagger served through the Kubernetes Ingress at `resolvedesk.local`
+5. Prometheus showing both backend pods UP and the Grafana "ResolveDesk API" dashboard with live traffic
+
+The terminal parts of the demo (pytest, docker compose, kubectl, helm, Terraform, troubleshooting) follow
+[docs/DEMO.md](docs/DEMO.md) and are shown live.
+
 ## Documentation
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - request flow, networking, design decisions
