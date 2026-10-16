@@ -2,6 +2,8 @@
 
 Repository: https://github.com/prince-shakyaa/resolvedesk-devops-capstone
 
+Google Form answers: Full name *Prince Shakya*, roll number *24BCS10084*, GitHub URL above.
+
 Put screenshots in `docs/screenshots/` using the file names below so the mapping is obvious.
 
 | Module | Requirement | Where in the repo | Screenshot to capture |
@@ -19,9 +21,9 @@ Put screenshots in `docs/screenshots/` using the file names below so the mapping
 
 ## GitHub settings to complete after the first push
 
-1. **Packages visibility** - GitHub -> your profile -> Packages -> `resolvedesk-backend` and
-   `resolvedesk-frontend` -> Package settings -> *Change visibility* -> Public. Otherwise
-   Kubernetes needs an `imagePullSecret` (the deploy job creates one named `ghcr-pull`).
+1. **Packages visibility** - both GHCR packages (`resolvedesk-backend`, `resolvedesk-frontend`)
+   are public, so clusters can pull them anonymously. If they are ever made private, Kubernetes
+   needs an `imagePullSecret` (the deploy job creates one named `ghcr-pull`).
 2. **Optional auto-deploy** - Settings -> Secrets and variables -> Actions:
    - variable `DEPLOY_ENABLED=true`, variable `INGRESS_HOST=<your hostname>`
    - secret `KUBE_CONFIG_DATA` = `base64 -w0 ~/.kube/config` (after `aws eks update-kubeconfig`)
