@@ -1,0 +1,45 @@
+name: Terraform (manual)
+
+# Manually triggered plan / apply / destroy for the AWS VPC + EKS stack.
+# Requires repository secrets AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+# (or swap the credentials step for OIDC role assumption).
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action"
+        required: true
+        default: plan
+        type: choice
+        options: [plan, apply, destroy]
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    environment: aws
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION || 'ap-south-1' }}
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+      - run: terraform init -input=false
+      - run: terraform validate
+      - name: Plan
+        run: terraform plan -input=false -out=tfplan
+      - name: Apply
+        if: inputs.action == 'apply'
+        run: terraform apply -input=false -auto-approve tfplan
+      - name: Destroy
+        if: inputs.action == 'destroy'
+        run: terraform destroy -input=false -auto-approve
