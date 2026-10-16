@@ -194,17 +194,24 @@ with `terraform apply` in ap-southeast-2 (destroyed right after).
 
 ## Demo recording
 
-A silent screen recording of the running system (about 80 seconds) is at
-[`docs/demo/resolvedesk-demo.mp4`](docs/demo/resolvedesk-demo.mp4). It walks through:
+[`docs/demo/resolvedesk-demo.mp4`](docs/demo/resolvedesk-demo.mp4) is a silent screen recording (about
+13 minutes, 1280x720) of the whole demo flow from [docs/DEMO.md](docs/DEMO.md), in this order:
 
-1. the ResolveDesk UI: creating a ticket, moving it to In Progress, assigning it and posting an update
-2. the FastAPI Swagger UI executing `/api/tickets/stats`
-3. the green GitHub Actions pipeline and the SHA-tagged images in GHCR
-4. the app and Swagger served through the Kubernetes Ingress at `resolvedesk.local`
-5. Prometheus showing both backend pods UP and the Grafana "ResolveDesk API" dashboard with live traffic
+1. **Application**: creating a ticket in the UI, moving it to In Progress, assigning it, posting an update, filtering
+2. **API**: Swagger UI executing `/api/tickets/stats`
+3. **Terminal, part 1**: git history, `pytest -v` (20 passed), `docker compose ps`, images and non-root users,
+   `/health` and `/ready`, the PostgreSQL `tickets` table, `/metrics`, a Trivy scan of the backend image, `terraform validate`
+4. **CI and registry**: the green GitHub Actions run and the SHA-tagged images in GHCR
+5. **Terminal, part 2**: `kubectl get pods/svc/ingress/hpa`, `helm list`/`history`/`test`, a request through the
+   Ingress, the HPA scaling from 2 to 4 pods under `scripts/load-test.sh`, then the broken-Service and broken-image
+   troubleshooting exercises diagnosed and fixed
+6. **Ingress and monitoring**: the app and Swagger at `resolvedesk.local`, Prometheus targets UP, the Grafana dashboard
+7. **Commit to deploy**: a version bump committed and pushed, `gh run watch` on the pipeline (the ~5 minute wait is
+   shown as a 12x time-lapse), `helm upgrade --set image.tag=<sha>`, the new revision and pods, the API reporting the
+   new version, the three green runs, and the UI showing the new version label
 
-The terminal parts of the demo (pytest, docker compose, kubectl, helm, Terraform, troubleshooting) follow
-[docs/DEMO.md](docs/DEMO.md) and are shown live.
+Everything in the video is real execution captured from a browser and a web terminal; nothing is narrated or staged.
+The Terraform apply/destroy on AWS is evidenced by the M7 screenshots rather than the video.
 
 ## Documentation
 
