@@ -1,0 +1,48 @@
+# Full local stack: PostgreSQL + FastAPI backend + Nginx-served React frontend.
+#   docker compose up --build      -> http://localhost:3000 (UI), http://localhost:8000/docs (API)
+#   docker compose down -v         -> stop and delete the database volume
+# Host ports can be overridden: BACKEND_PORT=8001 FRONTEND_PORT=3001 docker compose up
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: resolvedesk-postgres
+    environment:
+      POSTGRES_DB: resolvedesk
+      POSTGRES_USER: resolvedesk
+      POSTGRES_PASSWORD: resolvedesk
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resolvedesk -d resolvedesk"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    image: resolvedesk-backend:local
+    container_name: resolvedesk-backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://resolvedesk:resolvedesk@postgres:5432/resolvedesk
+      ENVIRONMENT: compose
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+
+  frontend:
+    build: ./frontend
+    image: resolvedesk-frontend:local
+    container_name: resolvedesk-frontend
+    environment:
+      BACKEND_URL: http://backend:8000
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-3000}:8080"
+
+volumes:
+  postgres-data:
