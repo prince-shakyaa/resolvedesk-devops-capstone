@@ -2,7 +2,6 @@
 
 Repository: https://github.com/prince-shakyaa/resolvedesk-devops-capstone
 
-Google Form answers: Full name *Prince Shakya*, roll number *24BCS10084*, GitHub URL above.
 
 Screenshots are in `docs/screenshots/` using the file names below (all captured except the M7 AWS ones, which require an AWS account).
 
