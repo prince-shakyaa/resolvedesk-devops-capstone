@@ -35,6 +35,10 @@ Make sure the application chart was installed with `monitoring.serviceMonitor.en
 
 Generate traffic so the panels are not empty: `scripts/load-test.sh`.
 
+Prefer the Ingress over `kubectl port-forward` for Grafana (port-forward drops connections under the
+dashboard's asset burst): `kubectl apply -f monitoring/ingress-local.yaml`, add `grafana.local` and
+`prometheus.local` to `/etc/hosts`, then open http://grafana.local and http://prometheus.local/targets.
+
 ## Metrics exposed by the backend
 
 | Metric | Type | Used for |

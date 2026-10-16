@@ -1,0 +1,41 @@
+# Optional: expose Prometheus and Grafana through the ingress controller for local demos.
+#   kubectl apply -f monitoring/ingress-local.yaml
+#   echo "127.0.0.1 grafana.local prometheus.local" | sudo tee -a /etc/hosts   (docker-desktop)
+#   echo "$(minikube ip) grafana.local prometheus.local" | sudo tee -a /etc/hosts  (minikube)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: grafana.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kube-prometheus-stack-grafana
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: prometheus.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kube-prometheus-stack-prometheus
+                port:
+                  number: 9090

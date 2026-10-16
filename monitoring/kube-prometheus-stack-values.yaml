@@ -28,8 +28,8 @@ grafana:
       labelValue: "1"
       searchNamespace: ALL
   resources:
-    requests: {cpu: 50m, memory: 128Mi}
-    limits: {cpu: 300m, memory: 256Mi}
+    requests: {cpu: 100m, memory: 256Mi}
+    limits: {cpu: 500m, memory: 768Mi}   # Grafana 12+ needs headroom while building its search index
 
 alertmanager:
   enabled: false

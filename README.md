@@ -169,6 +169,28 @@ Details, port-forward commands and PromQL in [`monitoring/README.md`](monitoring
 readiness path, wrong DATABASE_URL) with a [runbook](troubleshooting/RUNBOOK.md) explaining how to
 diagnose each with `kubectl describe`, `logs`, `get endpoints` and `get events`.
 
+## Evidence (screenshots)
+
+All images live in [`docs/screenshots/`](docs/screenshots/). They were captured from the Docker Compose
+stack, the GitHub Actions run `#26`, and the Helm release running on a local Kubernetes cluster
+(Docker Desktop) with ingress-nginx and kube-prometheus-stack installed.
+
+| Module | Screenshot |
+|--------|------------|
+| M1 Application | [UI](docs/screenshots/m1-ui.png) · [ticket drawer](docs/screenshots/m1-ui-ticket-drawer.png) · [Swagger](docs/screenshots/m1-swagger.png) |
+| M2 Testing | [pytest -v, 20 passed](docs/screenshots/m2-pytest.png) |
+| M3 Git | [commit history](docs/screenshots/m3-commits.png) · [git log](docs/screenshots/m3-commits-terminal.png) |
+| M4 Docker | [docker compose ps](docs/screenshots/m4-compose.png) · [images + non-root users](docs/screenshots/m4-images-nonroot.png) |
+| M5 CI/CD | [green pipeline](docs/screenshots/m5-actions-green.png) · [all runs](docs/screenshots/m5-actions-list.png) · [GHCR SHA tags](docs/screenshots/m5-ghcr-tags.png) |
+| M6 DevSecOps | [Trivy gate in CI](docs/screenshots/m6-trivy-ci.png) · [Trivy local scan](docs/screenshots/m6-trivy-local.png) · explanation in [docs/SECURITY.md](docs/SECURITY.md) |
+| M7 Terraform | `terraform validate` passes in CI on every push; `plan`/`apply`/`destroy` screenshots are added after the AWS run |
+| M8 Kubernetes + Helm | [pods](docs/screenshots/m8-pods.png) · [svc / ingress / hpa](docs/screenshots/m8-svc.png) · [helm list](docs/screenshots/m8-helm-list.png) · [app via Ingress](docs/screenshots/m8-ingress-browser.png) · [Swagger via Ingress](docs/screenshots/m8-ingress-swagger.png) · [curl through Ingress](docs/screenshots/m8-ingress-curl.png) |
+| M9 Observability | [/metrics](docs/screenshots/m9-metrics.png) · [Prometheus targets UP](docs/screenshots/m9-prom-targets.png) · [Grafana dashboard](docs/screenshots/m9-grafana.png) |
+
+![ResolveDesk UI](docs/screenshots/m1-ui.png)
+
+![Grafana dashboard](docs/screenshots/m9-grafana.png)
+
 ## Documentation
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - request flow, networking, design decisions
