@@ -1,0 +1,23 @@
+# Symptom: pod is Running but never Ready (0/1); Service sends it no traffic.
+# Cause:   readiness probe points at a path that returns 404.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broken-readiness
+  namespace: resolvedesk
+  labels: {exercise: broken-readiness}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: broken-readiness}
+  template:
+    metadata:
+      labels: {app: broken-readiness}
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/prince-shakyaa/resolvedesk-frontend:latest
+          ports: [{containerPort: 8080}]
+          readinessProbe:
+            httpGet: {path: /does-not-exist, port: 8080}
+            periodSeconds: 5

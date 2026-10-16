@@ -1,0 +1,23 @@
+# Symptom: pod enters CrashLoopBackOff; logs show the migration step failing to connect.
+# Cause:   DATABASE_URL points at a host that does not exist.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broken-config
+  namespace: resolvedesk
+  labels: {exercise: broken-config}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: broken-config}
+  template:
+    metadata:
+      labels: {app: broken-config}
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/prince-shakyaa/resolvedesk-backend:latest
+          env:
+            - name: DATABASE_URL
+              value: postgresql+psycopg://resolvedesk:resolvedesk@no-such-postgres:5432/resolvedesk
+          ports: [{containerPort: 8000}]

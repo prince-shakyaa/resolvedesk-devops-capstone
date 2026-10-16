@@ -1,0 +1,20 @@
+# Symptom: pod stuck in ImagePullBackOff / ErrImagePull.
+# Cause:   the image tag does not exist in the registry.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broken-image
+  namespace: resolvedesk
+  labels: {exercise: broken-image}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: broken-image}
+  template:
+    metadata:
+      labels: {app: broken-image}
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/prince-shakyaa/resolvedesk-backend:this-tag-does-not-exist
+          ports: [{containerPort: 8000}]

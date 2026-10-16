@@ -1,0 +1,15 @@
+# Symptom: Service exists but has no endpoints; curl to it hangs or refuses.
+# Cause:   the selector does not match any pod labels.
+apiVersion: v1
+kind: Service
+metadata:
+  name: broken-service
+  namespace: resolvedesk
+  labels: {exercise: broken-service}
+spec:
+  selector:
+    app.kubernetes.io/name: resolvedesk
+    app.kubernetes.io/component: backnd    # typo: should be "backend"
+  ports:
+    - port: 8000
+      targetPort: 8000
