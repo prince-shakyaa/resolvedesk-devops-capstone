@@ -1,0 +1,20 @@
+# `helm test resolvedesk -n resolvedesk` runs this pod and checks the API answers through the frontend proxy.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "resolvedesk.fullname" . }}-test-connection
+  labels:
+    {{- include "resolvedesk.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  restartPolicy: Never
+  containers:
+    - name: curl
+      image: curlimages/curl:8.11.1
+      command: ["sh", "-c"]
+      args:
+        - |
+          set -e
+          curl -fsS http://{{ include "resolvedesk.backendName" . }}:{{ .Values.backend.port }}/ready
+          curl -fsS http://{{ include "resolvedesk.frontendName" . }}/api/tickets/stats

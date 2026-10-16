@@ -1,0 +1,21 @@
+# Local minikube / Docker Desktop profile.
+#   minikube addons enable ingress metrics-server
+#   helm upgrade --install resolvedesk helm/resolvedesk -n resolvedesk --create-namespace -f helm/resolvedesk/values-dev.yaml
+#   echo "$(minikube ip) resolvedesk.local" | sudo tee -a /etc/hosts
+backend:
+  replicaCount: 2
+frontend:
+  replicaCount: 2
+postgres:
+  storage:
+    size: 1Gi
+ingress:
+  enabled: true
+  host: resolvedesk.local
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+monitoring:
+  serviceMonitor:
+    enabled: true

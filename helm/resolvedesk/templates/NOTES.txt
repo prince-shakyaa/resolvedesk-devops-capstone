@@ -1,0 +1,21 @@
+ResolveDesk has been deployed as release "{{ .Release.Name }}" in namespace "{{ .Release.Namespace }}".
+
+Check the rollout:
+  kubectl get pods,svc,hpa -n {{ .Release.Namespace }}
+
+{{- if .Values.ingress.enabled }}
+
+Open the application through the Ingress:
+  http://{{ .Values.ingress.host }}/          (frontend)
+  http://{{ .Values.ingress.host }}/docs      (API Swagger UI)
+Map the host if you are on minikube:
+  echo "$(minikube ip) {{ .Values.ingress.host }}" | sudo tee -a /etc/hosts
+{{- else }}
+
+Ingress is disabled. Port-forward instead:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "resolvedesk.frontendName" . }} 3000:80
+  open http://localhost:3000
+{{- end }}
+
+Run the chart's smoke test:
+  helm test {{ .Release.Name }} -n {{ .Release.Namespace }}

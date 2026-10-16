@@ -1,0 +1,91 @@
+# Default values for the resolvedesk chart.
+# Override per environment with values-dev.yaml (minikube) or values-prod.yaml (EKS).
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  # Shared tag for backend and frontend. CI sets this to the git commit SHA.
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# e.g. [{name: ghcr-pull}] when the GHCR packages are private.
+imagePullSecrets: []
+
+serviceAccount:
+  create: true
+  name: ""
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+
+backend:
+  image:
+    repository: ghcr.io/prince-shakyaa/resolvedesk-backend
+  replicaCount: 2
+  port: 8000
+  env:
+    ENVIRONMENT: kubernetes
+    LOG_LEVEL: info
+    WEB_CONCURRENCY: "2"
+  resources:
+    requests: {cpu: 100m, memory: 128Mi}
+    limits: {cpu: 500m, memory: 256Mi}
+  probes:
+    readiness: {initialDelaySeconds: 5, periodSeconds: 10, failureThreshold: 3}
+    liveness: {initialDelaySeconds: 15, periodSeconds: 20, failureThreshold: 3}
+
+frontend:
+  image:
+    repository: ghcr.io/prince-shakyaa/resolvedesk-frontend
+  replicaCount: 2
+  port: 8080
+  resources:
+    requests: {cpu: 25m, memory: 32Mi}
+    limits: {cpu: 200m, memory: 96Mi}
+
+postgres:
+  # Set to false to use an external database (e.g. Amazon RDS) via externalDatabaseUrl.
+  enabled: true
+  image: postgres:16-alpine
+  database: resolvedesk
+  username: resolvedesk
+  password: resolvedesk-change-me
+  # Name of a pre-created Secret with keys POSTGRES_USER / POSTGRES_PASSWORD (skips creating one).
+  existingSecret: ""
+  storage:
+    size: 5Gi
+    storageClassName: ""
+  resources:
+    requests: {cpu: 100m, memory: 128Mi}
+    limits: {cpu: 500m, memory: 512Mi}
+# Used only when postgres.enabled=false
+externalDatabaseUrl: ""
+
+ingress:
+  enabled: false
+  className: nginx
+  host: resolvedesk.local
+  annotations: {}
+  tls: []
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 60
+
+monitoring:
+  serviceMonitor:
+    # Requires the Prometheus Operator CRDs (kube-prometheus-stack).
+    enabled: false
+    interval: 15s
+    labels:
+      release: kube-prometheus-stack

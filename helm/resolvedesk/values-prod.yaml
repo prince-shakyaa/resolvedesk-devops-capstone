@@ -1,0 +1,26 @@
+# AWS EKS profile (cluster created by ./terraform).
+# CI overrides image.tag with the commit SHA and ingress.host from the INGRESS_HOST variable.
+image:
+  pullPolicy: Always
+backend:
+  replicaCount: 2
+  resources:
+    requests: {cpu: 200m, memory: 256Mi}
+    limits: {cpu: "1", memory: 512Mi}
+frontend:
+  replicaCount: 2
+postgres:
+  storage:
+    size: 10Gi
+    storageClassName: gp2
+ingress:
+  enabled: true
+  host: resolvedesk.example.com
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 60
+monitoring:
+  serviceMonitor:
+    enabled: true
