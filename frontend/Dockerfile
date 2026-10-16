@@ -8,7 +8,10 @@ RUN npm run build
 
 # ---------- Stage 2: serve static files with unprivileged Nginx ----------
 # nginx-unprivileged runs as uid 101 and listens on 8080 (no root required).
-FROM nginxinc/nginx-unprivileged:1.27-alpine
+FROM nginxinc/nginx-unprivileged:1.30-alpine
+# Pull in Alpine security patches released after the base image was built.
+USER root
+RUN apk upgrade --no-cache
 ENV BACKEND_URL=http://backend:8000
 COPY --from=build /app/dist /usr/share/nginx/html
 # Templates under /etc/nginx/templates are rendered with envsubst at startup.
