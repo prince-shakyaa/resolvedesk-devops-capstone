@@ -2,8 +2,8 @@ apiVersion: v2
 name: resolvedesk
 description: ResolveDesk IT helpdesk - React frontend, FastAPI backend and PostgreSQL
 type: application
-version: 1.1.0
-appVersion: "1.1.0"
+version: 1.1.1
+appVersion: "1.1.1"
 keywords: [helpdesk, fastapi, react, postgresql, devops-capstone]
 maintainers:
   - name: Prince Shakya

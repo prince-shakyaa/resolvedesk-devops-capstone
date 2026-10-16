@@ -2,6 +2,9 @@
 # Generate sustained traffic so the HPA scales and Grafana panels fill up.
 # Usage: URL=http://resolvedesk.local scripts/load-test.sh [requests] [concurrency]
 #        HOST_HEADER=resolvedesk.local URL=http://localhost scripts/load-test.sh   (no /etc/hosts entry needed)
+# The POSTs create 'Load test ticket' rows; remove them afterwards with:
+#   kubectl exec -n resolvedesk resolvedesk-postgres-0 -- psql -U resolvedesk -d resolvedesk \
+#     -c "DELETE FROM tickets WHERE requester = 'loadtest@example.com';"
 set -euo pipefail
 
 URL="${URL:-http://resolvedesk.local}"
