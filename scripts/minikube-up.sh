@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 TAG="${TAG:-latest}"
 IMAGE_PREFIX="${IMAGE_PREFIX:-ghcr.io/prince-shakyaa/resolvedesk}"
 
-minikube status >/dev/null 2>&1 || minikube start --cpus 4 --memory 6g
+minikube status >/dev/null 2>&1 || minikube start --cpus 2 --memory 4g
 minikube addons enable ingress
 minikube addons enable metrics-server
 
