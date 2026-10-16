@@ -1,0 +1,86 @@
+{
+  "title": "ResolveDesk API",
+  "uid": "resolvedesk-api",
+  "tags": ["resolvedesk", "fastapi"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": {"from": "now-30m", "to": "now"},
+  "templating": {
+    "list": [
+      {
+        "name": "namespace",
+        "type": "query",
+        "datasource": {"type": "prometheus", "uid": "prometheus"},
+        "query": "label_values(http_requests_total, namespace)",
+        "current": {"text": "resolvedesk", "value": "resolvedesk"},
+        "refresh": 2
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1, "type": "stat", "title": "Requests / sec",
+      "gridPos": {"x": 0, "y": 0, "w": 6, "h": 5},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "sum(rate(http_requests_total{namespace=\"$namespace\"}[2m]))"}],
+      "fieldConfig": {"defaults": {"unit": "reqps", "decimals": 2}}
+    },
+    {
+      "id": 2, "type": "stat", "title": "Error rate (5xx)",
+      "gridPos": {"x": 6, "y": 0, "w": 6, "h": 5},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "sum(rate(http_requests_total{namespace=\"$namespace\",status=~\"5..\"}[5m])) / clamp_min(sum(rate(http_requests_total{namespace=\"$namespace\"}[5m])), 0.001)"}],
+      "fieldConfig": {"defaults": {"unit": "percentunit", "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "orange", "value": 0.01}, {"color": "red", "value": 0.05}]}}}
+    },
+    {
+      "id": 3, "type": "stat", "title": "p95 latency",
+      "gridPos": {"x": 12, "y": 0, "w": 6, "h": 5},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{namespace=\"$namespace\"}[5m])) by (le))"}],
+      "fieldConfig": {"defaults": {"unit": "s", "decimals": 3}}
+    },
+    {
+      "id": 4, "type": "stat", "title": "Backend pods (HPA)",
+      "gridPos": {"x": 18, "y": 0, "w": 6, "h": 5},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "count(up{namespace=\"$namespace\", job=~\".*backend.*\"} == 1)"}],
+      "fieldConfig": {"defaults": {"unit": "none", "decimals": 0}}
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Requests per second by handler",
+      "gridPos": {"x": 0, "y": 5, "w": 12, "h": 9},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "sum by (handler, method) (rate(http_requests_total{namespace=\"$namespace\"}[2m]))", "legendFormat": "{{method}} {{handler}}"}],
+      "fieldConfig": {"defaults": {"unit": "reqps"}}
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Latency p50 / p95 / p99",
+      "gridPos": {"x": 12, "y": 5, "w": 12, "h": 9},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {"refId": "A", "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{namespace=\"$namespace\"}[5m])) by (le))", "legendFormat": "p50"},
+        {"refId": "B", "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{namespace=\"$namespace\"}[5m])) by (le))", "legendFormat": "p95"},
+        {"refId": "C", "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{namespace=\"$namespace\"}[5m])) by (le))", "legendFormat": "p99"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "s"}}
+    },
+    {
+      "id": 7, "type": "timeseries", "title": "Responses by status code",
+      "gridPos": {"x": 0, "y": 14, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "sum by (status) (rate(http_requests_total{namespace=\"$namespace\"}[2m]))", "legendFormat": "{{status}}"}],
+      "fieldConfig": {"defaults": {"unit": "reqps"}}
+    },
+    {
+      "id": 8, "type": "timeseries", "title": "Backend CPU (cores) vs HPA target",
+      "gridPos": {"x": 12, "y": 14, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {"refId": "A", "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", container=\"backend\"}[2m]))", "legendFormat": "{{pod}}"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "none"}}
+    }
+  ]
+}
