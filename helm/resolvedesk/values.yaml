@@ -38,11 +38,12 @@ backend:
     LOG_LEVEL: info
     WEB_CONCURRENCY: "2"
   resources:
-    requests: {cpu: 100m, memory: 128Mi}
-    limits: {cpu: 500m, memory: 256Mi}
+    requests: {cpu: 100m, memory: 192Mi}
+    limits: {cpu: 500m, memory: 512Mi}   # 2 uvicorn workers; 256Mi was OOM-killed under load
   probes:
-    readiness: {initialDelaySeconds: 5, periodSeconds: 10, failureThreshold: 3}
-    liveness: {initialDelaySeconds: 15, periodSeconds: 20, failureThreshold: 3}
+    # Generous timeouts so a CPU-saturated pod is not restarted mid load-test.
+    readiness: {initialDelaySeconds: 5, periodSeconds: 10, timeoutSeconds: 3, failureThreshold: 3}
+    liveness: {initialDelaySeconds: 15, periodSeconds: 20, timeoutSeconds: 5, failureThreshold: 4}
 
 frontend:
   image:

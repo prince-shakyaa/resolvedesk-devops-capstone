@@ -49,7 +49,7 @@ export default function App() {
           <span className="brand__mark">✓</span>
           <div>
             <b>ResolveDesk</b>
-            <small>IT Helpdesk</small>
+            <small>IT Helpdesk · v1.1</small>
           </div>
         </div>
         <nav>
