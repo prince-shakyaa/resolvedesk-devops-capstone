@@ -27,6 +27,23 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.postgres.enabled }}
+      initContainers:
+        # The headless postgres Service has no DNS record until its pod is Ready, so the
+        # migration step would crash-loop on a fresh install. Wait for the port instead.
+        - name: wait-for-postgres
+          image: {{ .Values.backend.waitForPostgresImage | quote }}
+          command: ["sh", "-c"]
+          args:
+            - until nc -z {{ include "resolvedesk.postgresName" . }} 5432; do echo "waiting for postgres"; sleep 2; done
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          resources:
+            requests: {cpu: 10m, memory: 16Mi}
+            limits: {cpu: 50m, memory: 32Mi}
+      {{- end }}
       containers:
         - name: backend
           image: "{{ .Values.backend.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"

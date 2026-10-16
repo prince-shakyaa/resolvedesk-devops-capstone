@@ -31,6 +31,8 @@ backend:
     repository: ghcr.io/prince-shakyaa/resolvedesk-backend
   replicaCount: 2
   port: 8000
+  # Tiny image used by the init container that waits for PostgreSQL to accept connections.
+  waitForPostgresImage: busybox:1.37
   env:
     ENVIRONMENT: kubernetes
     LOG_LEVEL: info
