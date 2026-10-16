@@ -1,7 +1,7 @@
 # EKS control plane + one managed node group in the private subnets.
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "20.31.6"
+  version = "21.29.0"
 
   cluster_name    = "${local.name}-eks"
   cluster_version = var.cluster_version
