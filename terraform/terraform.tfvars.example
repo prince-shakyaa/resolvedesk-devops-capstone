@@ -1,12 +1,12 @@
 # Copy to terraform.tfvars and adjust. terraform.tfvars is git-ignored.
 # Never put AWS access keys here - use `aws configure`, environment variables or an IAM role.
 
-aws_region  = "ap-south-1"
+aws_region  = "ap-southeast-2"
 project     = "resolvedesk"
 environment = "dev"
 owner       = "prince-shakyaa"
 
-availability_zones   = ["ap-south-1a", "ap-south-1b"]
+availability_zones   = ["ap-southeast-2a", "ap-southeast-2b"]
 public_subnet_cidrs  = ["10.20.101.0/24", "10.20.102.0/24"]
 private_subnet_cidrs = ["10.20.1.0/24", "10.20.2.0/24"]
 single_nat_gateway   = true
@@ -16,6 +16,10 @@ node_instance_types = ["t3.medium"]
 node_min_size       = 2
 node_max_size       = 4
 node_desired_size   = 2
+
+# Accounts from the new AWS sign-up experience ("Projects") cannot create IAM OIDC providers;
+# turn the EBS CSI IRSA role off there (PVCs then need the EBS CSI driver installed another way).
+# enable_ebs_csi_irsa = false
 
 # Lock the API endpoint down to your own IP for anything beyond a classroom demo:
 # cluster_endpoint_public_access_cidrs = ["203.0.113.10/32"]

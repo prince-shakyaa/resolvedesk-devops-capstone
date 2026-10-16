@@ -3,7 +3,7 @@
 Repository: https://github.com/prince-shakyaa/resolvedesk-devops-capstone
 
 
-Screenshots are in `docs/screenshots/` using the file names below (all captured except the M7 AWS ones, which require an AWS account).
+Screenshots are in `docs/screenshots/` using the file names below.
 
 | Module | Requirement | Where in the repo | Screenshot to capture |
 |--------|-------------|-------------------|-----------------------|
@@ -13,7 +13,7 @@ Screenshots are in `docs/screenshots/` using the file names below (all captured 
 | M4 Docker | both Dockerfiles, multi-stage frontend, non-root, compose | `backend/Dockerfile`, `frontend/Dockerfile`, `docker-compose.yml` | `m4-compose.png`, `m4-browser.png` |
 | M5 CI/CD | workflow on push to main, pytest job, frontend build, both images, GHCR, SHA tags | `.github/workflows/ci-cd.yml` | `m5-actions-green.png`, `m5-ghcr-tags.png` |
 | M6 DevSecOps | Trivy on both images, fail on HIGH/CRITICAL, explanation | `ci-cd.yml` (Trivy gate), `docs/SECURITY.md` | `m6-trivy.png` |
-| M7 Terraform | valid HCL, init/plan, VPC 2 public subnets, EKS node group, destroy, tfvars.example | `terraform/` | `m7-plan.png`, `m7-aws-vpc.png`, `m7-aws-eks.png`, `m7-destroy.png` **(pending: needs AWS credentials)** |
+| M7 Terraform | valid HCL, init/plan, VPC 2 public subnets, EKS node group, destroy, tfvars.example | `terraform/` | `m7-plan.png`, `m7-aws-vpc.png`, `m7-aws-eks.png`, `m7-aws-eks-nodegroup.png`, `m7-eks-nodes.png`, `m7-destroy.png` |
 | M8 K8s + Helm | namespace, chart, upgrade --install, 2 replicas, ClusterIP, Ingress `/` and `/api`, pods Running | `k8s/namespace.yaml`, `helm/resolvedesk` | `m8-pods.png`, `m8-svc.png`, `m8-helm-list.png`, `m8-ingress-browser.png` |
 | M9 Observability | `/metrics`, Prometheus scraping, Grafana panel | `monitoring/` | `m9-metrics.png`, `m9-prom-targets.png`, `m9-grafana.png` |
 | M10 Docs | README, live demo | `README.md`, `docs/DEMO.md` | - |

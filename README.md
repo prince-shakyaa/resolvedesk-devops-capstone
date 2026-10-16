@@ -136,7 +136,7 @@ See [`terraform/README.md`](terraform/README.md). In short:
 
 ```bash
 cd terraform && terraform init && terraform plan && terraform apply
-aws eks update-kubeconfig --region ap-south-1 --name resolvedesk-dev-eks
+aws eks update-kubeconfig --region ap-southeast-2 --name resolvedesk-dev-eks
 # ... demo ...
 terraform destroy
 ```
@@ -172,8 +172,9 @@ diagnose each with `kubectl describe`, `logs`, `get endpoints` and `get events`.
 ## Evidence (screenshots)
 
 All images live in [`docs/screenshots/`](docs/screenshots/). They were captured from the Docker Compose
-stack, the GitHub Actions run `#26`, and the Helm release running on a local Kubernetes cluster
-(Docker Desktop) with ingress-nginx and kube-prometheus-stack installed.
+stack, the GitHub Actions run `#26`, the Helm release running on a local Kubernetes cluster
+(Docker Desktop) with ingress-nginx and kube-prometheus-stack installed, and a real EKS cluster created
+with `terraform apply` in ap-southeast-2 (destroyed right after).
 
 | Module | Screenshot |
 |--------|------------|
@@ -183,7 +184,7 @@ stack, the GitHub Actions run `#26`, and the Helm release running on a local Kub
 | M4 Docker | [docker compose ps](docs/screenshots/m4-compose.png) · [images + non-root users](docs/screenshots/m4-images-nonroot.png) |
 | M5 CI/CD | [green pipeline](docs/screenshots/m5-actions-green.png) · [all runs](docs/screenshots/m5-actions-list.png) · [GHCR SHA tags](docs/screenshots/m5-ghcr-tags.png) |
 | M6 DevSecOps | [Trivy gate in CI](docs/screenshots/m6-trivy-ci.png) · [Trivy local scan](docs/screenshots/m6-trivy-local.png) · explanation in [docs/SECURITY.md](docs/SECURITY.md) |
-| M7 Terraform | `terraform validate` passes in CI on every push; `plan`/`apply`/`destroy` screenshots are added after the AWS run |
+| M7 Terraform | [terraform plan](docs/screenshots/m7-plan.png) · [VPC subnets in AWS console](docs/screenshots/m7-aws-vpc.png) · [EKS cluster](docs/screenshots/m7-aws-eks.png) · [node group](docs/screenshots/m7-aws-eks-nodegroup.png) · [kubectl get nodes on EKS](docs/screenshots/m7-eks-nodes.png) · [terraform init](docs/screenshots/m7-init.png) · [terraform destroy](docs/screenshots/m7-destroy.png) |
 | M8 Kubernetes + Helm | [pods](docs/screenshots/m8-pods.png) · [svc / ingress / hpa](docs/screenshots/m8-svc.png) · [helm list](docs/screenshots/m8-helm-list.png) · [app via Ingress](docs/screenshots/m8-ingress-browser.png) · [Swagger via Ingress](docs/screenshots/m8-ingress-swagger.png) · [curl through Ingress](docs/screenshots/m8-ingress-curl.png) |
 | M9 Observability | [/metrics](docs/screenshots/m9-metrics.png) · [Prometheus targets UP](docs/screenshots/m9-prom-targets.png) · [Grafana dashboard](docs/screenshots/m9-grafana.png) |
 

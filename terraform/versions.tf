@@ -13,7 +13,7 @@ terraform {
   # backend "s3" {
   #   bucket         = "resolvedesk-tfstate-<account-id>"
   #   key            = "eks/terraform.tfstate"
-  #   region         = "ap-south-1"
+  #   region         = "ap-southeast-2"
   #   dynamodb_table = "resolvedesk-tf-lock"
   #   encrypt        = true
   # }

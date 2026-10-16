@@ -16,15 +16,22 @@ module "eks" {
   # Gives the identity running `terraform apply` cluster-admin via EKS access entries.
   enable_cluster_creator_admin_permissions = true
 
-  cluster_addons = {
-    coredns    = {}
-    kube-proxy = {}
-    vpc-cni    = {}
-    aws-ebs-csi-driver = {
+  # The EKS module creates the IAM OIDC provider when enable_irsa is true.
+  enable_irsa = var.enable_ebs_csi_irsa
+
+  cluster_addons = merge(
+    {
+      coredns    = {}
+      kube-proxy = {}
+      vpc-cni    = {}
+    },
+    var.enable_ebs_csi_irsa ? {
       # PostgreSQL's PersistentVolumeClaim needs the EBS CSI driver on EKS >= 1.23.
-      service_account_role_arn = module.ebs_csi_irsa.iam_role_arn
-    }
-  }
+      aws-ebs-csi-driver = {
+        service_account_role_arn = module.ebs_csi_irsa[0].iam_role_arn
+      }
+    } : {}
+  )
 
   eks_managed_node_group_defaults = {
     ami_type       = "AL2023_x86_64_STANDARD"
@@ -35,6 +42,7 @@ module "eks" {
   eks_managed_node_groups = {
     general = {
       name           = "${local.name}-general"
+      iam_role_name  = "${local.name}-node" # keep the IAM role name_prefix under AWS's 38-char limit
       min_size       = var.node_min_size
       max_size       = var.node_max_size
       desired_size   = var.node_desired_size
@@ -52,6 +60,8 @@ module "eks" {
 
 # IAM role for the EBS CSI driver service account (IRSA).
 module "ebs_csi_irsa" {
+  count = var.enable_ebs_csi_irsa ? 1 : 0
+
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.48.0"
 

@@ -3,7 +3,7 @@
 Provisions the production-style infrastructure for ResolveDesk:
 
 ```text
-AWS (ap-south-1)
+AWS (ap-southeast-2)
 └── VPC 10.20.0.0/16
     ├── public subnets  10.20.101.0/24 (1a), 10.20.102.0/24 (1b)   <- NAT gateway, load balancers
     ├── private subnets 10.20.1.0/24   (1a), 10.20.2.0/24   (1b)   <- EKS worker nodes
@@ -11,6 +11,12 @@ AWS (ap-south-1)
         ├── managed node group "general": 2-4 x t3.medium
         └── add-ons: coredns, kube-proxy, vpc-cni, aws-ebs-csi-driver (IRSA)
 ```
+
+> **New AWS accounts ("Projects" experience).** Accounts created through the new AWS sign-up flow are pinned
+> to one region chosen from the contact address (India -> `ap-southeast-2` Sydney) and carry an AWS-managed
+> service control policy that denies every other region, so `aws_region`/`availability_zones` default to
+> Sydney. The same policy denies `iam:CreateOpenIDConnectProvider`; set `enable_ebs_csi_irsa = false` on
+> such accounts. Classic accounts can use any region.
 
 > **Cost warning.** An EKS control plane (~$0.10/h), a NAT gateway (~$0.05/h + data) and two
 > t3.medium nodes cost real money every hour they exist. Run `terraform destroy` as soon as the
@@ -29,7 +35,7 @@ terraform validate
 terraform plan -out=tfplan
 terraform apply tfplan                          # ~15 minutes
 
-aws eks update-kubeconfig --region ap-south-1 --name resolvedesk-dev-eks
+aws eks update-kubeconfig --region ap-southeast-2 --name resolvedesk-dev-eks
 kubectl get nodes
 ```
 

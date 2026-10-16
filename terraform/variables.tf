@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS region to deploy into."
   type        = string
-  default     = "ap-south-1"
+  default     = "ap-southeast-2"
 }
 
 variable "project" {
@@ -31,7 +31,7 @@ variable "vpc_cidr" {
 variable "availability_zones" {
   description = "Availability zones for the subnets (two or more)."
   type        = list(string)
-  default     = ["ap-south-1a", "ap-south-1b"]
+  default     = ["ap-southeast-2a", "ap-southeast-2b"]
 }
 
 variable "public_subnet_cidrs" {
@@ -83,4 +83,14 @@ variable "cluster_endpoint_public_access_cidrs" {
   description = "CIDRs allowed to reach the public EKS API endpoint. Narrow this to your IP in real environments."
   type        = list(string)
   default     = ["0.0.0.0/0"]
+}
+
+variable "enable_ebs_csi_irsa" {
+  description = <<-EOT
+    Create an IAM OIDC provider + IRSA role for the EBS CSI driver add-on (needed for PersistentVolumeClaims).
+    Set to false on accounts created through the new AWS sign-up experience ("Projects"): their managed
+    service control policy denies iam:CreateOpenIDConnectProvider.
+  EOT
+  type        = bool
+  default     = true
 }
