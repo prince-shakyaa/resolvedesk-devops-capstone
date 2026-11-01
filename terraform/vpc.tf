@@ -2,7 +2,7 @@
 # subnets (EKS nodes) spread across two availability zones.
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "5.16.0"
+  version = "5.21.0"
 
   name = "${local.name}-vpc"
   cidr = var.vpc_cidr
